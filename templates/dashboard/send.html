@@ -1,0 +1,15 @@
+{% extends "dashboard/base.html" %}
+{% block content %}
+<div class="container">
+    <form method="POST" accept-charset="UTF-8">
+        {% csrf_token %}
+        <h3>Money</h3>
+        {{form.money}}
+        <h3>Receiver's card number</h3>
+        {{form.receiver_card}}
+        <br>
+        <br>
+        <input class="btn btn-lg btn-success btn-block" type="submit" value="Send">
+    </form>
+</div>
+{% endblock content %}

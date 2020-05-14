@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    </head>
+
+    <body>
+        {% if user.is_authenticated %}
+        <div class="container d-flex flex-column">
+            <h1 class="align-self-center">You are logged in as {{user.username}}</h1>
+            <button type="button" class="btn btn-success btn-sm" onclick="location.href = '/dashboard';">Go to dashboard</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="location.href = '/logout';">Log out</button>
+        </div>
+        {% else %}
+        <div class="container d-flex flex-column">
+            <h1 class="align-self-center">You are not logged in</h1>
+            <button type="button" class="btn btn-success btn-sm" onclick="location.href = '/dashboard';">Log In</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="location.href = '/register';">Register</button>
+        </div>
+        {% endif %}
+    </body>
+</html>
