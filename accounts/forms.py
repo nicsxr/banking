@@ -58,4 +58,4 @@ class SendMoneyForm(forms.Form):
 
     def clean(self, *args, **kwargs):
         if self.cleaned_data.get('money') <= 0:
-            raise forms.ValidationError('Money amount should be above 0')
+            raise forms.ValidationError('Money <= 0')
