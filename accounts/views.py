@@ -92,10 +92,23 @@ def send_view(request):
     return render(request, 'dashboard/send.html', context)
 
 @login_required
-def profile(request):
-    form = AccountUpdateForm()
+def profile_view(request):
+    if request.method == 'POST':
+        form = AccountUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Account updated succesfully!')
+            return redirect('/dashboard')
+        else:
+            messages.warning(request, 'Something went wrong!')
+            return redirect('/dashboard/profile')
 
-    return render(request, '/dashboard/profile', 'form': form)
+    else:
+        form = AccountUpdateForm(instance=request.user)
+    context = {
+        'form': form,
+    }
+    return render(request, 'dashboard/profile.html', context)
 
 
 def logout_view(request):
