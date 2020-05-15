@@ -11,7 +11,7 @@ from django.contrib.auth import (
     login,
     logout
 )
-from .forms import UserLoginForm, UserRegisterForm, SendMoneyForm
+from .forms import UserLoginForm, UserRegisterForm, SendMoneyForm, AccountUpdateForm
 
 
 def login_view(request):
@@ -90,6 +90,12 @@ def send_view(request):
         'form': form,
     }
     return render(request, 'dashboard/send.html', context)
+
+@login_required
+def profile(request):
+    form = AccountUpdateForm()
+
+    return render(request, '/dashboard/profile', 'form': form)
 
 
 def logout_view(request):

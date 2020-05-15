@@ -59,3 +59,10 @@ class SendMoneyForm(forms.Form):
     def clean(self, *args, **kwargs):
         if self.cleaned_data.get('money') <= 0:
             raise forms.ValidationError('Money <= 0')
+
+class AccountUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
