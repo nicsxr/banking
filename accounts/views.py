@@ -23,7 +23,7 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         login(request, user)
         if next:
-            messages.success(request, 'Logged in successfully! Welcome back ' + username )
+            messages.success(request, 'Successfully logged in! Welcome back ' + username )
             return redirect(next)
         return redirect('/dashboard')
 
