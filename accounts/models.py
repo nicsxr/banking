@@ -41,7 +41,7 @@ class Account(AbstractBaseUser):
 	is_staff				= models.BooleanField(default=False)
 	is_superuser			= models.BooleanField(default=False)
 	card_number 			= models.CharField(default=random_card(10), max_length=10)
-	money                   = models.FloatField(default=0)
+	money                   = models.FloatField(default=10)
 
 
 	USERNAME_FIELD = 'username'
@@ -60,3 +60,11 @@ class Account(AbstractBaseUser):
 	def has_module_perms(self, app_label):
 		return True
 
+class Transaction(models.Model):
+	sender = models.CharField(max_length=30)
+	receiver = models.CharField(max_length=30)
+	sentMoney = models.CharField(max_length=30)
+	objects = models.Manager()
+
+	def __repr__(self):
+		return 'Sender: ' + self.sender + ' Receiver: ' + self.receiver + ' Money: ' + self.sentMoney

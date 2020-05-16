@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-from .models import Account
+from .models import Account, Transaction
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -56,7 +56,12 @@ def register_view(request):
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'dashboard/home.html')
+    user = request.user
+    my_transactions = Transaction.objects.filter(sender = user.username)
+    context = {
+        'transactions': my_transactions
+    }
+    return render(request, 'dashboard/home.html', context)
 
 @login_required
 def send_view(request):
@@ -66,12 +71,12 @@ def send_view(request):
         if form.is_valid():
             #check if card exists
             try:
-                receiver = Account.objects.get(card_number = form.cleaned_data.get('receiver_card'))
+                m_receiver = Account.objects.get(card_number = form.cleaned_data.get('receiver_card'))
             except ObjectDoesNotExist:
                 messages.warning(request, 'Card Not Found!')
                 return redirect('/dashboard')
             #transaction
-            if receiver:
+            if m_receiver:
                 #check if user has sufficient funds
                 moneyToSend = abs(form.cleaned_data.get('money'))
                 if user.money - moneyToSend < 0:
@@ -79,10 +84,12 @@ def send_view(request):
                     return redirect('/dashboard')
                 
                 user.money -= round(moneyToSend, 2)
-                receiver.money += round(moneyToSend, 2)
-                receiver.save()
+                m_receiver.money += round(moneyToSend, 2)
+                m_receiver.save()
                 user.save()
-                messages.success(request, 'Money Sent! <b>Details</b>: ' + str(moneyToSend) + '$ to ' + receiver.username)
+                transcation = Transaction(sender=user.username, receiver=m_receiver.username, sentMoney=moneyToSend)
+                transcation.save()
+                messages.success(request, 'Money Sent! <b>Details</b>: ' + str(moneyToSend) + '$ to ' + m_receiver.username)
                 return redirect('/dashboard')
         else:
             messages.warning(request, 'Something went wrong')
