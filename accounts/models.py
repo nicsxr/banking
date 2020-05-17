@@ -63,8 +63,9 @@ class Account(AbstractBaseUser):
 class Transaction(models.Model):
 	sender = models.CharField(max_length=30)
 	receiver = models.CharField(max_length=30)
-	sentMoney = models.CharField(max_length=30)
+	sent_money = models.CharField(max_length=30)
+	time_sent = models.DateTimeField(auto_now_add=True)
 	objects = models.Manager()
 
 	def __repr__(self):
-		return 'Sender: ' + self.sender + ' Receiver: ' + self.receiver + ' Money: ' + self.sentMoney
+		return 'Sender: ' + self.sender + ' Receiver: ' + self.receiver + ' Money: ' + self.sent_money

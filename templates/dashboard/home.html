@@ -11,5 +11,14 @@
     <span><strong>Money Left: </strong>{{user.money}}</span>
     <button type="button" class="btn btn-success btn-lg " onclick="location.href = '/dashboard/send';">Send</button>
 </div>
-{{transactions}}
+{% for tran in transactions  %}
+<div class='container'>
+    <hr>
+    <span><strong>Sender: </strong></span>{{tran.sender}}
+    <span><strong>Money: </strong></span>{{tran.sent_money}}
+    <span><strong>Receiver: </strong></span>{{tran.receiver}}
+    <span><strong>Time: </strong></span>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}
+    <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href = '#';">View transaction</button>
+</div>
+{% endfor %}
 {% endblock content %}
