@@ -11,14 +11,25 @@
     <span><strong>Money Left: </strong>{{user.money}}</span>
     <button type="button" class="btn btn-success btn-lg " onclick="location.href = '/dashboard/send';">Send</button>
 </div>
-{% for tran in transactions  %}
-<div class='container'>
-    <hr>
-    <span><strong>Sender: </strong></span>{{tran.sender}}
-    <span><strong>Money: </strong></span>{{tran.sent_money}}
-    <span><strong>Receiver: </strong></span>{{tran.receiver}}
-    <span><strong>Time: </strong></span>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}
-    <button type="button" class="btn btn-outline-primary btn-sm" onclick="location.href = '#';">View transaction</button>
-</div>
-{% endfor %}
+<hr>
+<ul class="list-group">
+    {% for tran in transactions  %}
+    {% if tran.sender == user.username %}
+        <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
+            <span><strong>Sent to: </strong>{{tran.receiver}}</span>
+            <span><strong>Amount: </strong>{{tran.sent_money}}</span>
+            <span><strong>Time: </strong>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}</span>
+            <a type="button" class="btn btn-outline-success btn-sm" href = 'transaction/{{tran.id}}'>View transaction</a>
+        </li>     
+    {% else %}  
+        <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+            <span><strong>Received from: </strong>{{tran.sender}}</span>
+            <span><strong>Amount: </strong>{{tran.sent_money}}</span>
+            <span><strong>Time: </strong>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}</span>
+            <a type="button" class="btn btn-outline-primary btn-sm" href = 'transaction/{{tran.id}}'>View transaction</a>
+        </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+
 {% endblock content %}

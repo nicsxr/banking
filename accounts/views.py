@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import F
+from django.db.models import F, Q
 from .models import Account, Transaction
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .management.commands import currency
+from uuid import UUID
 
 from django.contrib.auth import (
     authenticate,
@@ -58,12 +59,37 @@ def register_view(request):
 @login_required
 def dashboard_view(request):
     user = request.user
-    my_transactions = Transaction.objects.filter(sender = user.username).order_by('-time_sent')
+    my_transactions = Transaction.objects.filter(Q(sender = user.username) | Q(receiver = user.username)).order_by('-time_sent')
     context = {
         'transactions': my_transactions,
         'currency': currency
     }
     return render(request, 'dashboard/home.html', context)
+
+@login_required
+def transaction_view(request, id):
+    user = request.user
+
+    #check if provided string is uuid
+    try:
+        UUID(id, version=4)
+    except ValueError:
+        messages.warning(request, 'Invalid argument!')
+        return redirect('/dashboard') 
+
+    #get transaction
+    try:
+        transaction = Transaction.objects.get(id=id)
+    except ObjectDoesNotExist:
+        messages.warning(request, 'Transaction does not exist!')
+        return redirect('/dashboard')        
+
+    #need to check permission !!!!!!!!!!!!!!1
+
+    context = {
+        'transaction': transaction
+    }
+    return render(request, 'dashboard/transaction.html', context)
 
 @login_required
 def send_view(request):
