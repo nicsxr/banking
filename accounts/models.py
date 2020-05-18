@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from .tests import rand_x_digit_num as random_card
 
@@ -61,11 +62,14 @@ class Account(AbstractBaseUser):
 		return True
 
 class Transaction(models.Model):
+	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	sender = models.CharField(max_length=30)
 	receiver = models.CharField(max_length=30)
 	sent_money = models.CharField(max_length=30)
 	time_sent = models.DateTimeField(auto_now_add=True)
 	objects = models.Manager()
 
+	def __str__(self):
+		return str(self.id)
 	def __repr__(self):
 		return 'Sender: ' + self.sender + ' Receiver: ' + self.receiver + ' Money: ' + self.sent_money

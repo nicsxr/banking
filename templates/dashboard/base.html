@@ -46,18 +46,21 @@
                   </div>
               </div>
               <br>
-              <div class="profile-sidebar">
-                <div class="profile-usertitle">
-                    <div class="profile-usertitle-name">
-                        Exchange Rates
-                    </div>
-                    <div class="profile-usertitle-job">
-                        USD > GEL {{currency.usd_gel}} <br>
-                        EUR > GEL {{currency.eur_gel}} <br>
-                        GBP > GEL {{currency.gbp_gel}} <br>
-                    </div>
+              {% if currency %}
+                <div class="profile-sidebar">
+                  <div class="profile-usertitle">
+                      <div class="profile-usertitle-name">
+                          Exchange Rates
+                      </div>
+                      <div class="profile-usertitle-job">
+                          <strong>USD > GEL </strong>{{currency.usd_gel}} <br>
+                          <strong>EUR > GEL </strong>{{currency.eur_gel}} <br>
+                          <strong>GBP > GEL </strong>{{currency.gbp_gel}} <br>
+                      </div>
+                  </div>
                 </div>
-            </div>
+              <br>
+              {% endif %}
           </div>
           <div class="col-md-9">
               <div class="profile-content">
