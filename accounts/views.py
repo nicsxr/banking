@@ -4,7 +4,7 @@ from django.db.models import F
 from .models import Account, Transaction
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
-from .APIs import currency
+from .management.commands import currency
 
 from django.contrib.auth import (
     authenticate,
@@ -61,7 +61,7 @@ def dashboard_view(request):
     my_transactions = Transaction.objects.filter(sender = user.username).order_by('-time_sent')
     context = {
         'transactions': my_transactions,
-        'usd_gel': currency.usd_gel
+        'currency': currency
     }
     return render(request, 'dashboard/home.html', context)
 
