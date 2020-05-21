@@ -11,7 +11,7 @@ usd_gel = None
 eur_gel = None
 gbp_gel = None
 
-def run_continuously(self, interval=4000):
+def run_continuously(self, interval=300):
     cease_continuous_run = threading.Event()
 
     class ScheduleThread(threading.Thread):
@@ -34,11 +34,11 @@ def pr():
     global gbp_gel
     try:
         usd_gel = requests.get(url_usd).json()
-        usd_gel = usd_gel['USD_GEL']
+        usd_gel = round(usd_gel['USD_GEL'], 3)
         eur_gel = requests.get(url_eur).json()
-        eur_gel = eur_gel['EUR_GEL']
+        eur_gel = round(eur_gel['EUR_GEL'], 3)
         gbp_gel = requests.get(url_gbp).json()
-        gbp_gel = gbp_gel['GBP_GEL']
+        gbp_gel = round(gbp_gel['GBP_GEL'], 3)
         print('CURRENCIES UPDATED! USD - GEL ' + str(usd_gel) + 'EUR - GEL ' + str(eur_gel) + 'GBP - GEL ' + str(gbp_gel))
 
     except Exception as err:
@@ -48,7 +48,5 @@ def start_scheduler():
     scheduler = Scheduler()
     scheduler.every().second.do(pr)
     scheduler.run_continuously()
-
-pr()
 
 start_scheduler()

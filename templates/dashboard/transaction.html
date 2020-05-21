@@ -1,8 +1,11 @@
 {% extends "dashboard/base.html" %}
 {% block content %}
-<h1>{{transaction.sender}}</h1>
-<h1>{{transaction.receiver}}</h1>
-<h1>{{transaction.sent_money}}</h1>
-<h1>{{transaction.time_sent}}</h1>
-<h1>{{transaction.id}}</h1>
+<div class='container'>
+    <h4><strong>Sender: </strong>{{transaction.sender}}</h4>
+    <h4><strong>Receiver: </strong>{{transaction.receiver}}</h4>
+    <h4><strong>Money: </strong>{{transaction.sent_money}}</h4>
+    <h4><strong>Date: </strong>{{transaction.time_sent}}</h4>
+    <h4><strong>Transaction ID: </strong>{{transaction.id}}</h4>
+    <a type="button" class="btn btn-primary btn-lg btn-block" href = 'javascript:history.back()'>Back</a>
+</div>
 {% endblock content %}

@@ -59,7 +59,7 @@ def register_view(request):
 @login_required
 def dashboard_view(request):
     user = request.user
-    my_transactions = Transaction.objects.filter(Q(sender = user.username) | Q(receiver = user.username)).order_by('-time_sent')
+    my_transactions = Transaction.objects.filter(Q(sender = user) | Q(receiver = user)).order_by('-time_sent')
     context = {
         'transactions': my_transactions,
         'currency': currency
@@ -68,7 +68,6 @@ def dashboard_view(request):
 
 @login_required
 def transaction_view(request, id):
-    user = request.user
 
     #check if provided string is uuid
     try:
@@ -82,7 +81,7 @@ def transaction_view(request, id):
         transaction = Transaction.objects.get(id=id)
     except ObjectDoesNotExist:
         messages.warning(request, 'Transaction does not exist!')
-        return redirect('/dashboard')        
+        return redirect('/dashboard')
 
     #need to check permission !!!!!!!!!!!!!!1
 
@@ -119,7 +118,7 @@ def send_view(request):
                 receiver.money += round(moneyToSend, 2)
                 receiver.save()
                 user.save()
-                transcation = Transaction(sender=user.username, receiver=receiver.username, sent_money=moneyToSend)
+                transcation = Transaction(sender=user, receiver=receiver, sent_money=moneyToSend)
                 transcation.save()
                 messages.success(request, 'Money Sent! <b>Details</b>: ' + str(moneyToSend) + '$ to ' + receiver.username)
                 return redirect('/dashboard')
