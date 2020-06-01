@@ -61,10 +61,17 @@ class Account(AbstractBaseUser):
 	def has_module_perms(self, app_label):
 		return True
 
+class Card(models.Model):
+	owner = models.ForeignKey(Account, on_delete=models.CASCADE)
+	number = models.CharField(default=random_card(10), max_length=10)
+	money = models.FloatField(default=10)
+	objects = models.Manager()
+
+
 class Transaction(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-	sender = models.ForeignKey(Account, on_delete = models.CASCADE, related_name='sender')
-	receiver = models.ForeignKey(Account, on_delete = models.CASCADE, related_name='receiver')
+	sender = models.ForeignKey(Card, on_delete = models.CASCADE, related_name='sender')
+	receiver = models.ForeignKey(Card, on_delete = models.CASCADE, related_name='receiver')
 	sent_money = models.CharField(max_length=30)
 	time_sent = models.DateTimeField(auto_now_add=True)
 	objects = models.Manager()

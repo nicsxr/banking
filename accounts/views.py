@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Q
-from .models import Account, Transaction
+from .models import Account, Transaction, Card
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .management.commands import currency
@@ -59,9 +59,12 @@ def register_view(request):
 @login_required
 def dashboard_view(request):
     user = request.user
-    my_transactions = Transaction.objects.filter(Q(sender = user) | Q(receiver = user)).order_by('-time_sent')
+    user_card = Card.objects.get(owner = user)
+    my_transactions = Transaction.objects.filter(Q(sender = user_card) | Q(receiver = user_card)).order_by('-time_sent')
+    cards = Card.objects.filter(owner=user)
     context = {
         'transactions': my_transactions,
+        'cards': cards,
         'currency': currency
     }
     return render(request, 'dashboard/home.html', context)
@@ -93,34 +96,35 @@ def transaction_view(request, id):
 @login_required
 def send_view(request):
     user = request.user
+    sender_card = Card.objects.get(owner = user)
     form = SendMoneyForm(request.POST)
     if request.method == 'POST':
         if form.is_valid():
             #check if card exists
             try:
-                receiver = Account.objects.get(card_number = form.cleaned_data.get('receiver_card'))
+                receiver_card = Card.objects.get(number = form.cleaned_data.get('receiver_card'))
             except ObjectDoesNotExist:
                 messages.warning(request, 'Card Not Found!')
                 return redirect('/dashboard')
             #transaction
-            if receiver:
+            if receiver_card:
                 #check if he's sending to other
-                if user.card_number == receiver.card_number:
+                if sender_card.number == receiver_card.number:
                     messages.warning(request, 'You can not send money to yourself!')
                     return redirect('/dashboard')
                 #check if user has sufficient funds
                 moneyToSend = abs(form.cleaned_data.get('money'))
-                if user.money - moneyToSend < 0:
+                if sender_card.money - moneyToSend < 0:
                     messages.warning(request, 'Not enough money!')
                     return redirect('/dashboard')
                 
-                user.money -= round(moneyToSend, 2)
-                receiver.money += round(moneyToSend, 2)
-                receiver.save()
-                user.save()
-                transcation = Transaction(sender=user, receiver=receiver, sent_money=moneyToSend)
+                sender_card.money -= round(moneyToSend, 2)
+                receiver_card.money += round(moneyToSend, 2)
+                receiver_card.save()
+                sender_card.save()
+                transcation = Transaction(sender=sender_card, receiver=receiver_card, sent_money=moneyToSend)
                 transcation.save()
-                messages.success(request, 'Money Sent! <b>Details</b>: ' + str(moneyToSend) + '$ to ' + receiver.username)
+                messages.success(request, 'Money Sent! <b>Details</b>: ' + str(moneyToSend) + '$ to ' + receiver_card.owner.username)
                 return redirect('/dashboard')
         else:
             messages.warning(request, 'Something went wrong')

@@ -54,6 +54,12 @@ class UserRegisterForm(forms.ModelForm):
 
 class SendMoneyForm(forms.Form):
     money = forms.FloatField(label='Money to send')
+    Options = [
+        ('1', 'GEL'),
+        ('2', 'USD'),
+        ('2', 'EUR'),
+      ]
+    selected_card = forms.ChoiceField(label='Card', widget=forms.Select, choices=Options)
     receiver_card = forms.CharField(label='Card ID')
 
     def clean(self, *args, **kwargs):

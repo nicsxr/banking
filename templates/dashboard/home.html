@@ -1,29 +1,37 @@
 {% extends "dashboard/base.html" %}
 {% block content %}
 <!--CARD CONTENT-->
-<div class="container d-flex justify-content-between">
-    <svg class="bi bi-credit-card" width="5em" height="5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" d="M14 3H2a1 1 0 00-1 1v8a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1zM2 2a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H2z" clip-rule="evenodd"/>
-        <rect width="3" height="3" x="2" y="9" rx="1"/>
-        <path d="M1 5h14v2H1z"/>
-    </svg>
-    <span><strong>Card Number: </strong>{{user.card_number}}</span>
-    <span><strong>Money Left: </strong>{{user.money}}</span>
-    <button type="button" class="btn btn-success btn-lg " onclick="location.href = '/dashboard/send';">Send</button>
-</div>
+{% for card in cards %}
+    <div class="container d-flex justify-content-between">
+
+        <svg class="bi bi-credit-card" width="5em" height="5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M14 3H2a1 1 0 00-1 1v8a1 1 0 001 1h12a1 1 0 001-1V4a1 1 0 00-1-1zM2 2a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H2z" clip-rule="evenodd"/>
+            <rect width="3" height="3" x="2" y="9" rx="1"/>
+            <path d="M1 5h14v2H1z"/>
+        </svg>
+        <span><strong>Card Number: </strong>{{card.owner.username}}</span>
+        <div> 
+            <strong>Money GEL: </strong>{{card.money}} <br>
+            <strong>Money USD: </strong>{{card.money_usd}} <br>
+            <strong>Money EUR: </strong>{{card.money_usd}}
+        </div>
+        <button type="button" class="btn btn-success btn-lg " onclick="location.href = '/dashboard/send';">Send</button>
+    </div>
+    <hr>
+{% endfor %}
 <hr>
 <ul class="list-group">
     {% for tran in transactions  %}
     {% if tran.sender == user %}
         <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
-            <span><strong>Sent to: </strong>{{tran.receiver}}</span>
+            <span><strong>Sent to: </strong>{{tran.receiver.owner.username}}</span>
             <span><strong>Amount: </strong>{{tran.sent_money}}</span>
             <span><strong>Time: </strong>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}</span>
             <a type="button" class="btn btn-outline-primary btn-sm" href = 'transaction/{{tran.id}}'>View transaction</a>
         </li>     
     {% else %}  
         <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
-            <span><strong>Sent from: </strong>{{tran.sender}}</span>
+            <span><strong>Sent from: </strong>{{tran.sender.owner.username}}</span>
             <span><strong>Amount: </strong>{{tran.sent_money}}</span>
             <span><strong>Time: </strong>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}</span>
             <a type="button" class="btn btn-outline-success btn-sm" href = 'transaction/{{tran.id}}'>View transaction</a>

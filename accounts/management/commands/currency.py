@@ -49,4 +49,5 @@ def start_scheduler():
     scheduler.every().second.do(pr)
     scheduler.run_continuously()
 
+
 start_scheduler()

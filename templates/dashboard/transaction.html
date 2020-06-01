@@ -1,8 +1,8 @@
 {% extends "dashboard/base.html" %}
 {% block content %}
 <div class='container'>
-    <h4><strong>Sender: </strong>{{transaction.sender}}</h4>
-    <h4><strong>Receiver: </strong>{{transaction.receiver}}</h4>
+    <h4><strong>Sender: </strong>{{transaction.sender.owner.username}}</h4>
+    <h4><strong>Receiver: </strong>{{transaction.receiver.owner.username}}</h4>
     <h4><strong>Money: </strong>{{transaction.sent_money}}</h4>
     <h4><strong>Date: </strong>{{transaction.time_sent}}</h4>
     <h4><strong>Transaction ID: </strong>{{transaction.id}}</h4>
