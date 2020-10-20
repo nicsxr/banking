@@ -10,9 +10,32 @@
         <br>
         {{form.category}}
         <br>
+        <h1 id="card_owner"></h1>
+        <br>
         <input class="btn btn-lg btn-success btn-block" type="submit" value="Send">
     </form>
     <br>
+    <button type="button" class="btn btn-lg btn-primary btn-block" onclick="checkUser()">Check card's owner</button>
+    <br>
     <button type="button" class="btn btn-lg btn-danger btn-block" onclick="location.href = '/dashboard';">Back</button>
 </div>
+<script>
+    function checkUser(){
+        card = $("#id_receiver_card").val();
+        if(!card){
+            $('#card_owner').text("Card number must be filled!")
+        }else{
+            $.ajax({
+                url: '/checkuser/'+card,
+                type: 'GET', // This is the default though, you don't actually need to always mention it
+                success: function(data) {
+                    $('#card_owner').text(data)
+                },
+                failure: function(data) { 
+                    alert('Got an error dude')
+                }
+            })
+        }
+    }
+</script>
 {% endblock content %}

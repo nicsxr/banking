@@ -9,11 +9,9 @@
             <rect width="3" height="3" x="2" y="9" rx="1"/>
             <path d="M1 5h14v2H1z"/>
         </svg>
-        <span><strong>Card Number: </strong>{{card.owner.username}}</span>
+        <span><strong>Card Number: </strong>{{card.number}}</span>
         <div> 
             <strong>Money GEL: </strong>{{card.money}} <br>
-            <strong>Money USD: </strong>{{card.money_usd}} <br>
-            <strong>Money EUR: </strong>{{card.money_usd}}
         </div>
         <button type="button" class="btn btn-success btn-lg " onclick="location.href = '/dashboard/send';">Send</button>
     </div>
@@ -22,7 +20,7 @@
 <hr>
 <ul class="list-group">
     {% for tran in transactions  %}
-    {% if tran.sender == user %}
+    {% if tran.sender.owner == user %}
         <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
             <span><strong>Sent to: </strong>{{tran.receiver.owner.username}}</span>
             <span><strong>Amount: </strong>{{tran.sent_money}}</span>
@@ -31,7 +29,7 @@
         </li>     
     {% else %}  
         <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
-            <span><strong>Sent from: </strong>{{tran.sender.owner.username}}</span>
+            <span><strong>Sent by: </strong>{{tran.sender.owner.username}}</span>
             <span><strong>Amount: </strong>{{tran.sent_money}}</span>
             <span><strong>Time: </strong>{{tran.time_sent|date:"D d M Y"}} at {{tran.time_sent|time:"H:i"}}</span>
             <a type="button" class="btn btn-outline-success btn-sm" href = 'transaction/{{tran.id}}'>View transaction</a>

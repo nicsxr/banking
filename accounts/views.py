@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import F, Q
 from .models import Account, Transaction, Card
@@ -43,6 +43,8 @@ def register_view(request):
         password = form.cleaned_data.get('password')
         user.set_password(password)
         user.save()
+        card = Card(owner=user, money=10)
+        card.save()
         new_user = authenticate(username=user.username, password=password)
         login(request, new_user)
         if next:
@@ -151,6 +153,14 @@ def profile_view(request):
         'form': form,
     }
     return render(request, 'dashboard/profile.html', context)
+
+@login_required
+def CHECK_CARD_OWNER(request, card):
+    try:
+        card_owner = Card.objects.get(number = card).owner.username
+        return HttpResponse(card_owner)
+    except ObjectDoesNotExist:
+        return HttpResponse("Card doesn't exist")
 
 
 def logout_view(request):
